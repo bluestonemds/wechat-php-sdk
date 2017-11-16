@@ -10,6 +10,7 @@
  *			'encodingaeskey'=>'encodingaeskey', //填写加密用的EncodingAESKey
  *			'appid'=>'wxdk1234567890', //填写高级调用功能的app id
  *			'appsecret'=>'xxxxxxxxxxxxxxxxxxx', //填写高级调用功能的密钥
+ *			'txlsecret'=>'xxxxxxxxxxxxxxxxxxx',//通讯录API
  *			'agentid'=>'1', //应用的id
  *			'debug'=>false, //调试开关
  *			'logcallback'=>'logg', //调试输出方法，需要有一个string类型的参数
@@ -85,6 +86,7 @@ class Wechat
 	private $encodingAesKey;
 	private $appid;         //也就是企业号的CorpID
 	private $appsecret;
+	private $txlsecret;
 	private $access_token;
     private $agentid;       //应用id   AgentID
 	private $postxml;
@@ -104,6 +106,7 @@ class Wechat
 		$this->encodingAesKey = isset($options['encodingaeskey'])?$options['encodingaeskey']:'';
 		$this->appid = isset($options['appid'])?$options['appid']:'';
 		$this->appsecret = isset($options['appsecret'])?$options['appsecret']:'';
+		$this->txlsecret = isset($options['txlsecret'])?$options['txlsecret']:'';
 		$this->agentid = isset($options['agentid'])?$options['agentid']:'';
 		$this->debug = isset($options['debug'])?$options['debug']:false;
 		$this->logcallback = isset($options['logcallback'])?$options['logcallback']:false;
@@ -1244,7 +1247,7 @@ class Wechat
 	 * }
 	 */
 	public function createDepartment($data){
-	    if (!$this->access_token && !$this->checkAuth()) return false;
+	    if (!$this->access_token && !$this->checkAuth($this->appid,$this->txlsecrect)) return false;
 	    $result = $this->http_post(self::API_URL_PREFIX.self::DEPARTMENT_CREATE_URL.'access_token='.$this->access_token,self::json_encode($data));
 	    if ($result)
 	    {
@@ -1276,7 +1279,7 @@ class Wechat
 	 * }
 	 */
 	public function updateDepartment($data){
-	    if (!$this->access_token && !$this->checkAuth()) return false;
+	    if (!$this->access_token && !$this->checkAuth($this->appid,$this->txlsecrect)) return false;
 	    $result = $this->http_post(self::API_URL_PREFIX.self::DEPARTMENT_UPDATE_URL.'access_token='.$this->access_token,self::json_encode($data));
 	    if ($result)
 	    {
@@ -1301,7 +1304,7 @@ class Wechat
 	 * }
 	 */
 	public function deleteDepartment($id){
-	    if (!$this->access_token && !$this->checkAuth()) return false;
+	    if (!$this->access_token && !$this->checkAuth($this->appid,$this->txlsecrect)) return false;
 	    $result = $this->http_get(self::API_URL_PREFIX.self::DEPARTMENT_DELETE_URL.'access_token='.$this->access_token.'&id='.$id);
 	    if ($result)
 	    {
@@ -1331,7 +1334,7 @@ class Wechat
 	 * }
 	 */
 	public function moveDepartment($data){
-	    if (!$this->access_token && !$this->checkAuth()) return false;
+	    if (!$this->access_token && !$this->checkAuth($this->appid,$this->txlsecrect)) return false;
 	    $result = $this->http_post(self::API_URL_PREFIX.self::DEPARTMENT_MOVE_URL.'access_token='.$this->access_token,self::json_encode($data));
 	    if ($result)
 	    {
@@ -1406,7 +1409,7 @@ class Wechat
 	 * }
 	 */
 	public function createUser($data){
-	    if (!$this->access_token && !$this->checkAuth()) return false;
+	    if (!$this->access_token && !$this->checkAuth($this->appid,$this->txlsecrect)) return false;
 	    $result = $this->http_post(self::API_URL_PREFIX.self::USER_CREATE_URL.'access_token='.$this->access_token,self::json_encode($data));
 	    if ($result)
 	    {
@@ -1443,7 +1446,7 @@ class Wechat
 	 * }
 	 */
 	public function updateUser($data){
-	    if (!$this->access_token && !$this->checkAuth()) return false;
+	    if (!$this->access_token && !$this->checkAuth($this->appid,$this->txlsecrect)) return false;
 	    $result = $this->http_post(self::API_URL_PREFIX.self::USER_UPDATE_URL.'access_token='.$this->access_token,self::json_encode($data));
 	    if ($result)
 	    {
@@ -1468,7 +1471,7 @@ class Wechat
 	 * }
 	 */
 	public function deleteUser($userid){
-	    if (!$this->access_token && !$this->checkAuth()) return false;
+	    if (!$this->access_token && !$this->checkAuth($this->appid,$this->txlsecrect)) return false;
 	    $result = $this->http_get(self::API_URL_PREFIX.self::USER_DELETE_URL.'access_token='.$this->access_token.'&userid='.$userid);
 	    if ($result)
 	    {
@@ -1500,7 +1503,7 @@ class Wechat
 	public function deleteUsers($userids){
 	    if (!$userids) return false;
 	    $data = array('useridlist'=>$userids);
-	    if (!$this->access_token && !$this->checkAuth()) return false;
+	    if (!$this->access_token && !$this->checkAuth($this->appid,$this->txlsecrect)) return false;
 	    $result = $this->http_post(self::API_URL_PREFIX.self::USER_BATCHDELETE_URL.'access_token='.$this->access_token,self::json_encode($data));
 	    if ($result)
 	    {
